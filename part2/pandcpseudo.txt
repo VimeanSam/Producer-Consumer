@@ -1,0 +1,52 @@
+-First, I should find a way to printout the current system time.
+	Used to measure runtime
+-initialize buffers and other global variables variables for producers and consumers.
+	N = number of buffers
+	P = number of producers
+	C = number of consumers
+	X = Number of items produced by producers
+	CX = Number of items consumed by consumers (P*X/C)
+	PTime = Sleep Time for producer
+	CTime = Sleep Time for consumer
+-creates 1D arrays.
+	Producer Array with size of P*X
+	Consumer Array with size of also P*X
+-join threads
+	Copied from part 1 using struct threadArgs that contains pthreads and its id.
+-Use enqueue to add items and dequeue to remove items.
+	Strategy copied from the ch 5 slides.
+	enqueue(item){
+		put item in buffer array (for producer)
+		Loop around buffersize
+		return an item if addition is successful and 0 if unsucessful (when buffer is full)
+	}
+	dequeue(item){
+		decrement buffer array
+		Loop around buffersize
+		return an item if removal is successful and 0 if unsucessful (when buffer is empty)
+	}		
+
+-create functions for producers and consumers.
+	use enqueue for producers
+	producer(int thread id){
+		loop(){
+			activate semaphore wait
+			lock
+			call enqueue
+			put item returned by enqueue in pro array
+			unlock
+			sempahore post
+		}
+	}
+	consumer(int thread id){
+		when there are extra producers, the first consumer thread will do extra work
+		loop(){
+			activate semaphore wait
+			lock
+			call dequeue
+			put item returned by dequeue in con array
+			unlock
+			sempahore post
+		}
+	}
+	
